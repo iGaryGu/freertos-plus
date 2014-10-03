@@ -4,11 +4,12 @@
 #include <string.h>
 #include "fio.h"
 #include "filesystem.h"
-
+#include "romfs.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "host.h"
-
+#include <unistd.h>
+#define MAX_FS 16
 typedef struct {
 	const char *name;
 	cmdfunc *fptr;
@@ -24,7 +25,13 @@ void help_command(int, char **);
 void host_command(int, char **);
 void mmtest_command(int, char **);
 void test_command(int, char **);
-
+struct fs_t {
+	uint32_t hash;
+	fs_open_t cb;
+	void * opaque;
+};
+extern struct fs_t fss[MAX_FS];
+extern int hash;
 #define MKCL(n, d) {.name=#n, .fptr=n ## _command, .desc=d}
 
 cmdlist cl[]={
@@ -37,7 +44,9 @@ cmdlist cl[]={
 	MKCL(help, "help"),
 	MKCL(test, "test new function")
 };
-
+static uint32_t get_unaligned(const uint8_t * d){
+	return ((uint32_t) d[0]) | ((uint32_t) (d[1] << 8)) | ((uint32_t) (d[2] << 16)) | ((uint32_t) (d[3] << 24)); 
+}
 int parse_command(char *str, char *argv[]){
 	int b_quote=0, b_dbquote=0;
 	int i;
@@ -59,20 +68,17 @@ int parse_command(char *str, char *argv[]){
 	return count;
 }
 
-void ls_command(int n, char *argv[]){
 
-}
-
+extern int hhh;
+extern int hhhsize;
 int filedump(const char *filename){
 	char buf[128];
 
 	int fd=fs_open(filename, 0, O_RDONLY);
-
 	if(fd==OPENFAIL)
 		return 0;
 
 	fio_printf(1, "\r\n");
-
 	int count;
 	while((count=fio_read(fd, buf, sizeof(buf)))>0){
 		fio_write(1, buf, count);
@@ -81,7 +87,23 @@ int filedump(const char *filename){
 	fio_close(fd);
 	return 1;
 }
-
+extern uint32_t nowhash;
+extern int hhhsize;
+void ls_command(int n, char *argv[]){
+	char* path = "romfs";
+	uint32_t curhash;
+	curhash = hash_djb2((const uint8_t *)path,-1);
+	int i;
+	const uint8_t * meta;
+	for(i = 0 ; i < MAX_FS ;i++){
+		if(fss[i].hash == curhash){
+			const uint8_t * romfs = (const uint8_t *) fss[i].opaque;
+			for(meta = romfs ; get_unaligned(meta+32) && get_unaligned(meta+36);meta+=get_unaligned(meta+36)+40){
+				fio_printf(1,"%s\t",meta);
+			}
+		}
+	}
+}
 void ps_command(int n, char *argv[]){
 	signed char buf[1024];
 	vTaskList(buf);
