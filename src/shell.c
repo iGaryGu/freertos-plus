@@ -69,8 +69,6 @@ int parse_command(char *str, char *argv[]){
 }
 
 
-extern int hhh;
-extern int hhhsize;
 int filedump(const char *filename){
 	char buf[128];
 
@@ -87,8 +85,6 @@ int filedump(const char *filename){
 	fio_close(fd);
 	return 1;
 }
-extern uint32_t nowhash;
-extern int hhhsize;
 void ls_command(int n, char *argv[]){
 	char* path = "romfs";
 	uint32_t curhash;
@@ -162,12 +158,22 @@ void help_command(int n,char *argv[]){
 	}
 }
 
+int fib(int input){
+	if(input <= 0)
+		return 0;
+	if(input == 1)
+		return 1;
+	return fib(input - 1) + fib(input - 2);
+	
+}
 void test_command(int n, char *argv[]) {
     int handle;
     int error;
 
     fio_printf(1, "\r\n");
-
+	int num = atoi(argv[1]);
+	int result = fib(num);
+	fio_printf(1,"fib : %d\r\n",result);
     handle = host_action(SYS_OPEN, "output/syslog", 8);
     if(handle == -1) {
         fio_printf(1, "Open file error!\n\r");

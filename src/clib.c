@@ -135,3 +135,27 @@ char *utoa(const char *numbox, unsigned int num, unsigned int base){
 		buf[i] = numbox [num % base];
 	return buf+i+1;
 }
+
+int cal10base(int len){
+	int i;
+	int result =1;
+	for(i = 0 ; i < len;i++){
+		result = result * 10;
+	}
+	return result;
+}
+int atoi(char *num){
+	char * numstr = "0123456789";
+	int i;
+	int j;
+	size_t len = strlen( num );
+	int result = 0;
+	for(i = 0 ; i < (int)len ;i++){
+		for(j = 0; j < 10 ;j ++){
+			if(num[i] == numstr[j]){
+				result += j*cal10base(len - i-1);
+			}
+		}
+	}
+	return result;
+}
