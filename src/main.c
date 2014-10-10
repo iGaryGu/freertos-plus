@@ -89,11 +89,12 @@ void command_prompt(void *pvParameters)
 {
 	char buf[128];
 	char *argv[20];
-        char hint[] = USER_NAME "@" USER_NAME "-STM32:~$ ";
+    char hint[] = USER_NAME "@" USER_NAME "-STM32:~$ ";
 
 	fio_printf(1, "\rWelcome to FreeRTOS Shell\r\n");
+
 	while(1){
-                fio_printf(1, "%s", hint);
+		fio_printf(1, "%s", hint);
 		fio_read(0, buf, 127);
 	
 		int n=parse_command(buf, argv);
@@ -105,7 +106,6 @@ void command_prompt(void *pvParameters)
 		else
 			fio_printf(2, "\r\n\"%s\" command not found.\r\n", argv[0]);
 	}
-
 }
 
 void system_logger(void *pvParameters)
@@ -169,13 +169,14 @@ int main()
 	xTaskCreate(command_prompt,
 	            (signed portCHAR *) "CLI",
 	            512 /* stack size */, NULL, tskIDLE_PRIORITY + 2, NULL);
+//	xTaskCreate()
 
-#if 0
+//#if 0
 	/* Create a task to record system log. */
 	xTaskCreate(system_logger,
 	            (signed portCHAR *) "Logger",
 	            1024 /* stack size */, NULL, tskIDLE_PRIORITY + 1, NULL);
-#endif
+//#endif
 
 	/* Start running the tasks. */
 	vTaskStartScheduler();

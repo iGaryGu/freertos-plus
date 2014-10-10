@@ -99,6 +99,7 @@ void ls_command(int n, char *argv[]){
 			}
 		}
 	}
+	fio_printf(1,"\r\n");
 }
 void ps_command(int n, char *argv[]){
 	signed char buf[1024];
@@ -173,14 +174,17 @@ void test_command(int n, char *argv[]) {
     fio_printf(1, "\r\n");
 	int num = atoi(argv[1]);
 	int result = fib(num);
+
 	fio_printf(1,"fib : %d\r\n",result);
-    handle = host_action(SYS_OPEN, "output/syslog", 8);
+    handle = host_action(SYS_OPEN, "output/testlog", 8);
     if(handle == -1) {
         fio_printf(1, "Open file error!\n\r");
         return;
     }
+	char *fibAns = itoa("0123456789",result,10);
 
-    char *buffer = "Test host_write function which can write data to output/syslog\n";
+    char buffer[128] = "Test host_write function which can write data to output/syslog and fib answer is \n";
+	strcat(buffer,fibAns);
     error = host_action(SYS_WRITE, handle, (void *)buffer, strlen(buffer));
     if(error != 0) {
         fio_printf(1, "Write file error! Remain %d bytes didn't write in the file.\n\r", error);

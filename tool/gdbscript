@@ -2,5 +2,16 @@ file build/main.elf
 target remote :3333
 
 b main
-
 c
+b 98
+c
+
+set buf = "test 10"
+
+jump +1
+
+set buf = "ls"
+
+jump +1
+
+

@@ -95,7 +95,6 @@ size_t strlen(const char *str){
 	for(count=0;*str;++count, ++str);
 	return count;
 }
-
 char *strcat(char * restrict dest, const char * restrict source){
 	/* locate '\0' in dest */
 	for(;*dest;++dest);

@@ -19,7 +19,6 @@ int hash;
 __attribute__((constructor)) void fs_init() {
     memset(fss, 0, sizeof(fss));
 }
-
 int register_fs(const char * mountpoint, fs_open_t callback, void * opaque) {
     int i;
     DBGOUT("register_fs(\"%s\", %p, %p)\r\n", mountpoint, callback, opaque);

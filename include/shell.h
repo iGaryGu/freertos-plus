@@ -2,6 +2,7 @@
 #define SHELL_H
 
 int parse_command(char *str, char *argv[]);
+void test_command(int n , char *argv[]);
 
 typedef void cmdfunc(int, char *[]);
 
