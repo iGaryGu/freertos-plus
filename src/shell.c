@@ -172,10 +172,10 @@ void test_command(int n, char *argv[]) {
     int error;
 
     fio_printf(1, "\r\n");
-	int num = atoi(argv[1]);
-	int result = fib(num);
+    int num = atoi(argv[1]);
+    int result = fib(num);
 
-	fio_printf(1,"fib : %d\r\n",result);
+    fio_printf(1,"fib : %d\r\n",result);
     handle = host_action(SYS_OPEN, "output/testlog", 8);
     if(handle == -1) {
         fio_printf(1, "Open file error!\n\r");
