@@ -85,20 +85,20 @@ char recv_byte()
 	while(!xQueueReceive(serial_rx_queue, &msg, portMAX_DELAY));
 	return msg;
 }
+void background(void *pvParameters){
+	fio_printf(1,"\r\n here!!\r\n");
+}
 void command_prompt(void *pvParameters)
 {
 	char buf[128];
 	char *argv[20];
     char hint[] = USER_NAME "@" USER_NAME "-STM32:~$ ";
-
 	fio_printf(1, "\rWelcome to FreeRTOS Shell\r\n");
 
 	while(1){
 		fio_printf(1, "%s", hint);
 		fio_read(0, buf, 127);
-	
 		int n=parse_command(buf, argv);
-
 		/* will return pointer to the command function */
 		cmdfunc *fptr=do_command(argv[0]);
 		if(fptr!=NULL)
@@ -169,7 +169,6 @@ int main()
 	xTaskCreate(command_prompt,
 	            (signed portCHAR *) "CLI",
 	            512 /* stack size */, NULL, tskIDLE_PRIORITY + 2, NULL);
-//	xTaskCreate()
 
 //#if 0
 	/* Create a task to record system log. */

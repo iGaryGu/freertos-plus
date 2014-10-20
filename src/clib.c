@@ -136,11 +136,10 @@ char *utoa(const char *numbox, unsigned int num, unsigned int base){
 }
 
 int atoi(char *num){
-	size_t len = strlen(num);
 	int i = 0;
 	int result = 0;
 	int temp;
-	while(i!=len){
+	while(num[i]!= '\0'){
 		if((num[i]-' ') == 0){
 			i++;
 		}
