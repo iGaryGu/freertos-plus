@@ -85,9 +85,6 @@ char recv_byte()
 	while(!xQueueReceive(serial_rx_queue, &msg, portMAX_DELAY));
 	return msg;
 }
-void background(void *pvParameters){
-	fio_printf(1,"\r\n here!!\r\n");
-}
 void command_prompt(void *pvParameters)
 {
 	char buf[128];
