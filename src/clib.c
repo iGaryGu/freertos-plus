@@ -138,15 +138,17 @@ char *utoa(const char *numbox, unsigned int num, unsigned int base){
 int atoi(char *num){
 	size_t len = strlen(num);
 	int i = 0;
-	while((num[i]-' ')== 0){
-		i++;
-	}
 	int result = 0;
 	int temp;
 	while(i!=len){
-		temp = num[i]-'0';
-		result = result*10 + temp;
-		i++;
+		if((num[i]-' ') == 0){
+			i++;
+		}
+		else{
+			temp = num[i]-'0';
+			result = result*10 + temp;
+			i++;
+		}
 	}
 	return result;
 }
