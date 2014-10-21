@@ -85,6 +85,19 @@ char recv_byte()
 	while(!xQueueReceive(serial_rx_queue, &msg, portMAX_DELAY));
 	return msg;
 }
+
+xTaskHandle xHandle = NULL;
+void background(void *pvParameters){
+	char **argv = (char **)pvParameters;
+	cmdfunc *fptr=do_command(argv[0]);
+	if(fptr!=NULL)
+		fptr(2,argv);
+	else
+		fio_printf(2, "\r\n\"%s\" command not found.\r\n", argv[0]);
+	if(xHandle != NULL)
+		vTaskDelete(xHandle);
+}
+
 void command_prompt(void *pvParameters)
 {
 	char buf[128];
@@ -99,9 +112,16 @@ void command_prompt(void *pvParameters)
 		/* will return pointer to the command function */
 		cmdfunc *fptr=do_command(argv[0]);
 		if(fptr!=NULL)
-			fptr(n, argv);
+			// create a new task for background running to handle the test_command
+			if(strcmp(argv[0],"test")==0){
+				fio_printf(1,"\r\n");
+				xTaskCreate(background,(signed portCHAR*)"background",512,argv,tskIDLE_PRIORITY+1, &xHandle);
+			}
+			else
+				fptr(n, argv);
 		else
 			fio_printf(2, "\r\n\"%s\" command not found.\r\n", argv[0]);
+
 	}
 }
 
