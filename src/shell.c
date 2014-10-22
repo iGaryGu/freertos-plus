@@ -24,7 +24,7 @@ void host_command(int, char **);
 void help_command(int, char **);
 void host_command(int, char **);
 void mmtest_command(int, char **);
-void test_command(int, char **);
+void fib_command(int, char **);
 struct fs_t {
 	uint32_t hash;
 	fs_open_t cb;
@@ -42,7 +42,7 @@ cmdlist cl[]={
 	MKCL(host, "Run command on host"),
 	MKCL(mmtest, "heap memory allocation test"),
 	MKCL(help, "help"),
-	MKCL(test, "test new function")
+	MKCL(fib, "calculate the fib function")
 };
 static uint32_t get_unaligned(const uint8_t * d){
 	return ((uint32_t) d[0]) | ((uint32_t) (d[1] << 8)) | ((uint32_t) (d[2] << 16)) | ((uint32_t) (d[3] << 24)); 
@@ -167,7 +167,7 @@ int fib(int input){
 	return fib(input - 1) + fib(input - 2);
 	
 }
-void test_command(int n, char *argv[]) {
+void fib_command(int n, char *argv[]) {
     int handle;
     int error;
 

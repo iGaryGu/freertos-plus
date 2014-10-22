@@ -87,7 +87,7 @@ char recv_byte()
 }
 
 xTaskHandle xHandle = NULL;
-void background(void *pvParameters){
+void fib_handler(void *pvParameters){
 	char **argv = (char **)pvParameters;
 	cmdfunc *fptr=do_command(argv[0]);
 	if(fptr!=NULL)
@@ -112,10 +112,10 @@ void command_prompt(void *pvParameters)
 		/* will return pointer to the command function */
 		cmdfunc *fptr=do_command(argv[0]);
 		if(fptr!=NULL)
-			// create a new task for background running to handle the test_command
-			if(strcmp(argv[0],"test")==0){
+			// create a new task for background running to handle the fib_command
+			if(strncmp(argv[0],"fib",4)==0){
 				fio_printf(1,"\r\n");
-				xTaskCreate(background,(signed portCHAR*)"background",512,argv,tskIDLE_PRIORITY+1, &xHandle);
+				xTaskCreate(fib_handler,(signed portCHAR*)"fib_handler",512,argv,tskIDLE_PRIORITY+1, &xHandle);
 			}
 			else
 				fptr(n, argv);
